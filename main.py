@@ -1,6 +1,19 @@
 from nltk import regexp_tokenize
 
 
+class Bigram:
+
+    def __init__(self, head, tail):
+        self.head = head
+        self.tail = tail
+
+    def __str__(self):
+        result = f"Head: {self.head}  Tail:"
+        if self.tail is not None:
+            result = f"{result} {self.tail}"
+        return result
+
+
 def get_tokens_from_file():
     file_name = input()
     pattern = r"[^\s]+"
@@ -9,20 +22,24 @@ def get_tokens_from_file():
         for line in corpus_file:
             line_tokens = regexp_tokenize(line, pattern)
             _tokens.extend(line_tokens)
-    _unique_tokens = set(_tokens)
-    return _tokens, _unique_tokens
+    return _tokens
 
 
-def process_tokens(_tokens, _unique_tokens):
-    print("Corpus statistics")
-    print(f"All tokens: {len(_tokens)}")
-    print(f"Unique tokens: {len(_unique_tokens)}\n")
+def get_bigrams_from_tokens(_tokens):
+    _bigrams = []
+    for i in range(0, len(_tokens) - 1):
+        _bigrams.append(Bigram(_tokens[i], _tokens[i + 1]))
+    return _bigrams
 
 
-def check_input(tokens_len, index_str):
+def process_bigrams(_bigrams):
+    print(f"Number of bigrams: {len(_bigrams)}\n")
+
+
+def check_input(bigrams_len, index_str):
     try:
         index = int(index_str)
-        if 0 <= abs(index) < tokens_len:
+        if 0 <= abs(index) < bigrams_len:
             return True
         else:
             print("Index Error. Please input an integer that is in the range of the corpus.")
@@ -32,18 +49,17 @@ def check_input(tokens_len, index_str):
         return False
 
 
-def handle_input(_tokens):
+def handle_input(_bigrams):
     while True:
         index_str = input()
         if index_str == "exit":
             break
-        if check_input(len(_tokens), index_str):
-            print(_tokens[int(index_str)])
+        if check_input(len(_bigrams), index_str):
+            print(_bigrams[int(index_str)])
 
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    tokens, unique_tokens = get_tokens_from_file()
-    process_tokens(tokens, unique_tokens)
-    handle_input(tokens)
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    tokens = get_tokens_from_file()
+    bigrams = get_bigrams_from_tokens(tokens)
+    process_bigrams(bigrams)
+    handle_input(bigrams)
