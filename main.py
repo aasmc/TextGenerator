@@ -1,17 +1,13 @@
 from nltk import regexp_tokenize
+from collections import Counter
+from collections import defaultdict
 
 
-class Bigram:
-
-    def __init__(self, head, tail):
-        self.head = head
-        self.tail = tail
-
-    def __str__(self):
-        result = f"Head: {self.head}  Tail:"
-        if self.tail is not None:
-            result = f"{result} {self.tail}"
-        return result
+def print_tails_for_head(_bigrams, _head):
+    tails = (_bigrams[_head]).most_common()
+    print(f"Head: {_head}")
+    for name in tails:
+        print(f"Tail: {name[0]} \tCount: {name[1]}")
 
 
 def get_tokens_from_file():
@@ -26,40 +22,30 @@ def get_tokens_from_file():
 
 
 def get_bigrams_from_tokens(_tokens):
-    _bigrams = []
+    _bigrams = defaultdict(Counter)
     for i in range(0, len(_tokens) - 1):
-        _bigrams.append(Bigram(_tokens[i], _tokens[i + 1]))
+        _bigrams[tokens[i]][tokens[i + 1]] += 1
     return _bigrams
 
 
-def process_bigrams(_bigrams):
-    print(f"Number of bigrams: {len(_bigrams)}\n")
-
-
-def check_input(bigrams_len, index_str):
-    try:
-        index = int(index_str)
-        if 0 <= abs(index) < bigrams_len:
-            return True
-        else:
-            print("Index Error. Please input an integer that is in the range of the corpus.")
-            return False
-    except ValueError:
-        print("Type Error. Please input an integer.")
+def check_input(_bigrams, head_str):
+    if head_str not in _bigrams:
+        print("Key Error. The requested word is not in the model. Please input another word.")
         return False
+    else:
+        return True
 
 
 def handle_input(_bigrams):
     while True:
-        index_str = input()
-        if index_str == "exit":
+        head_str = input()
+        if head_str == "exit":
             break
-        if check_input(len(_bigrams), index_str):
-            print(_bigrams[int(index_str)])
+        if check_input(_bigrams, head_str):
+            print_tails_for_head(_bigrams, head_str)
 
 
 if __name__ == '__main__':
     tokens = get_tokens_from_file()
     bigrams = get_bigrams_from_tokens(tokens)
-    process_bigrams(bigrams)
     handle_input(bigrams)
