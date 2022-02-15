@@ -38,20 +38,14 @@ def print_tails_for_head(_bigrams, _head):
 
 
 def create_sentence(_start, _bigrams):
-    word_count = 1
-    sentence = f"{_start }"
-    tails = _bigrams[_start]
-    most_common = tails.most_common()
-    next_word = most_common[0][0]
-    while word_count < 10:
-        sentence = f"{sentence} {next_word}"
-        tails = _bigrams[next_word]
-        most_common = tails.most_common()
-        if len(most_common) == 0:
-            continue
-        if word_count != 9:
-            next_word = most_common[0][0]
-        word_count += 1
+    sentence = _start
+    next_word = ""
+    for i in range(9):
+        tails = list(_bigrams[_start].keys())
+        weights = list(_bigrams[_start].values())
+        next_word = random.choices(tails, weights)[0]
+        _start = next_word
+        sentence += ' ' + next_word
     return sentence, next_word
 
 
