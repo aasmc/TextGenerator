@@ -1,13 +1,7 @@
 from nltk import regexp_tokenize
 from collections import Counter
 from collections import defaultdict
-
-
-def print_tails_for_head(_bigrams, _head):
-    tails = (_bigrams[_head]).most_common()
-    print(f"Head: {_head}")
-    for name in tails:
-        print(f"Tail: {name[0]} \tCount: {name[1]}")
+import random
 
 
 def get_tokens_from_file():
@@ -36,13 +30,39 @@ def check_input(_bigrams, head_str):
         return True
 
 
+def print_tails_for_head(_bigrams, _head):
+    tails = (_bigrams[_head]).most_common()
+    print(f"Head: {_head}")
+    for name in tails:
+        print(f"Tail: {name[0]} \tCount: {name[1]}")
+
+
+def create_sentence(_start, _bigrams):
+    word_count = 1
+    sentence = f"{_start }"
+    tails = _bigrams[_start]
+    most_common = tails.most_common()
+    next_word = most_common[0][0]
+    while word_count < 10:
+        sentence = f"{sentence} {next_word}"
+        tails = _bigrams[next_word]
+        most_common = tails.most_common()
+        if len(most_common) == 0:
+            continue
+        if word_count != 9:
+            next_word = most_common[0][0]
+        word_count += 1
+    return sentence, next_word
+
+
 def handle_input(_bigrams):
-    while True:
-        head_str = input()
-        if head_str == "exit":
-            break
-        if check_input(_bigrams, head_str):
-            print_tails_for_head(_bigrams, head_str)
+    sentence_count = 0
+    start = random.choice(list(_bigrams))
+    while sentence_count < 10:
+        sencente, last = create_sentence(start, _bigrams)
+        print(sencente)
+        start = _bigrams[last].most_common()[0][0]
+        sentence_count += 1
 
 
 if __name__ == '__main__':
