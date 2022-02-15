@@ -212,3 +212,39 @@ for you out there will take it You don't know.
 she crucified the rest of them. The Boltons, the Watch
 father Tywin sent here in their minds aren't they lick
 ```
+
+## Stage 5
+### Description
+
+As you can see, the algorithm is now capable of generating pseudo-random text based on Markov chains. The problem is that the resulting text does not resemble real sentences at all. First, the resulting text is always ten tokens long. Second, it does not always start with capital letters. Third, it usually does not even end with correct punctuation such as periods, exclamation marks, or question marks.
+
+Luckily, by identifying the problem, a good programmer can always find ways to resolve it.
+- Make the algorithm more realistic by generating pseudo-sentences instead of just random text. The sentences that are being generated should:
+  - always start with capitalized words ("This is beautiful.", "You are a great programmer!", etc.);
+  - not start with a word that ends with a sentence-ending punctuation mark ("Okay.", "Nice.", "Good.", "Look!", "Jon!", etc.);
+  - always end with a sentence-ending punctuation mark like ., !, or ?; 
+  - should not be shorter than 5 tokens.
+- Generate and print exactly 10 pseudo-sentences that meet these criteria. A pseudo-sentence should end when the first sentence-ending punctuation mark is encountered after the minimal sentence length (5 tokens) is reached.
+
+Note that every generated pseudo-sentence should be on a new line.
+
+You should only print the output of the current stage and not the previous one. The name of the file that contains the corpus should be given as user input.
+
+### Example
+
+The greater-than symbol followed by a space (> ) represents user input.
+
+The output of your program should look something like this but with different sentences.
+```text
+> corpus.txt
+Ned Stark can still hold my head off, too.
+Just look at us. It's still remember seeing each of Yunkai have had nothing anymore.
+Braavos never attacks the Starks?
+I don't think it's true.
+I'm a captain. Of course he has a woman to protect us.
+Trust me about them? He smells of the northern sons.
+They have sold armor. I've taken your captors is how goes off our grasp.
+I realized peace while my years has a Lannister.
+Did you like the North more than your life?
+With my brothers and the dawn I serve in irons.
+```
