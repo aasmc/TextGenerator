@@ -16,10 +16,11 @@ def get_tokens_from_file():
     return _tokens
 
 
-def get_bigrams_from_tokens(_tokens):
+def get_trigrams_from_tokens(_tokens):
     _bigrams = defaultdict(Counter)
-    for i in range(0, len(_tokens) - 1):
-        _bigrams[tokens[i]][tokens[i + 1]] += 1
+    for i in range(0, len(_tokens) - 2):
+        key = f"{_tokens[i]} {_tokens[i + 1]}"
+        _bigrams[key][_tokens[i + 2]] += 1
     return _bigrams
 
 
@@ -50,23 +51,26 @@ def sentence_length_correct(_sentence):
     return len(_tokens) >= 5
 
 
-def create_sentence(_start, _bigrams):
+def create_sentence(_start, _trigrams):
     sentence = _start
     next_word = ""
     while not sentence_length_correct(sentence) or not last_word_correct(next_word):
-        tails = list(_bigrams[_start].keys())
-        weights = list(_bigrams[_start].values())
+        tails = list(_trigrams[_start].keys())
+        weights = list(_trigrams[_start].values())
         next_word = random.choices(tails, weights)[0]
-        _start = next_word
+        prev_word = _start.split()[1]
+        _start = f"{prev_word} {next_word}"
         sentence += ' ' + next_word
     return sentence
 
 
 def check_start(start):
-    pattern = "[A-Z]"
+    """Checks whether a given string [start] consists of two words,
+    begins with a capital letter, and there're no punctuation marks such as:
+    . or ? or ! between the words or at the end of the second word"""
+    pattern = r"[A-Z][^\s.!?]* [^\s.!?]+"
     first_is_upper_letter = regex.match(pattern, start)
-    last_not_punctuation = start[len(start) - 1] not in ".!?"
-    return first_is_upper_letter and last_not_punctuation
+    return first_is_upper_letter
 
 
 def handle_input(_bigrams):
@@ -86,5 +90,5 @@ def handle_input(_bigrams):
 
 if __name__ == '__main__':
     tokens = get_tokens_from_file()
-    bigrams = get_bigrams_from_tokens(tokens)
-    handle_input(bigrams)
+    trigrams = get_trigrams_from_tokens(tokens)
+    handle_input(trigrams)

@@ -248,3 +248,41 @@ I realized peace while my years has a Lannister.
 Did you like the North more than your life?
 With my brothers and the dawn I serve in irons.
 ```
+
+## Stage 6
+### Objectives
+
+Right now, the model is based on bigrams, that is, we only consider one word when trying to predict the next word in the chain.
+
+The algorithm should be extended so that it can use not only bigrams but also trigrams. We have already talked about trigrams in Stage 2. They are very similar to bigrams, the only difference being their length: trigrams consist of three tokens instead of just two. In the case of trigrams, every head should consist of two tokens. Tails should stay the same length as before since we are still aiming to predict the next word in the chain.
+
+This change implies the following tasks:
+
+- The list of bigrams should be transformed into a list of trigrams. It should still consist of heads and tails, but now, heads should consist of two space-separated tokens concatenated into a single string. The tails should still consist of one token. For example: head — winter is, tail — coming.
+- The model should be trained based on the list of trigrams. The model creation requires no modifications since trigrams still consist of a head and a tail.
+- The beginning of the chain should be a randomly chosen head from the model, not just any word from the corpus.
+- When predicting the next word, the model should be fed the concatenation of the last two tokens of the chain separated by a space.
+
+After making all these modifications, the output should look rather similar to the result of the previous stage, but now the generated pseudo-sentences should make a little more sense.
+
+Keep in mind that every generated pseudo-sentence should be in a new line.
+
+You should only print the output of the current stage and not the previous one. The name of the file that contains the corpus should be given as user input.
+### Example
+
+The greater-than symbol followed by a space (> ) represents user input.
+
+The output of your program should have the same formatting as shown below.
+```text
+> corpus.txt
+I sent men over the Wall every night.
+Kill him! Kill all who understand the law.
+They say 1,000 slaves died building the Great Keep at Winterfell.
+Queen Margaery. She walked in on Craster's Keep on the Iron Throne.
+They say 1,000 slaves died building the Great Keep at Winterfell.
+And why is the wheel our queen when she needed me the most.
+Dothraki omens. I waited 17 years ago there came a night with no regrets.
+Ah, yes. You shall now be held accountable.
+Don't cry. It will all be for you.
+Never understood why some knights felt the tears freeze on their own.
+```
