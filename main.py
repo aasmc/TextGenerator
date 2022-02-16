@@ -6,7 +6,7 @@ import random
 
 
 def get_tokens_from_file():
-    file_name = input()
+    file_name = input("Input a path to the file containing corpus: ")
     pattern = r"[^\s]+"
     _tokens = []
     with open(file_name, "r", encoding="utf-8") as corpus_file:
