@@ -1,6 +1,7 @@
 from nltk import regexp_tokenize
 from collections import Counter
 from collections import defaultdict
+import regex
 import random
 
 
@@ -37,25 +38,49 @@ def print_tails_for_head(_bigrams, _head):
         print(f"Tail: {name[0]} \tCount: {name[1]}")
 
 
+def last_word_correct(_last_word):
+    if not _last_word:
+        return False
+    last_symbol = _last_word[len(_last_word) - 1]
+    return last_symbol in ".!?"
+
+
+def sentence_length_correct(_sentence):
+    _tokens = _sentence.split()
+    return len(_tokens) >= 5
+
+
 def create_sentence(_start, _bigrams):
     sentence = _start
     next_word = ""
-    for i in range(9):
+    while not sentence_length_correct(sentence) or not last_word_correct(next_word):
         tails = list(_bigrams[_start].keys())
         weights = list(_bigrams[_start].values())
         next_word = random.choices(tails, weights)[0]
         _start = next_word
         sentence += ' ' + next_word
-    return sentence, next_word
+    return sentence
+
+
+def check_start(start):
+    pattern = "[A-Z]"
+    first_is_upper_letter = regex.match(pattern, start)
+    last_not_punctuation = start[len(start) - 1] not in ".!?"
+    return first_is_upper_letter and last_not_punctuation
 
 
 def handle_input(_bigrams):
     sentence_count = 0
     start = random.choice(list(_bigrams))
+    while not check_start(start):
+        start = random.choice(list(_bigrams))
     while sentence_count < 10:
-        sencente, last = create_sentence(start, _bigrams)
+        sencente = create_sentence(start, _bigrams)
         print(sencente)
-        start = _bigrams[last].most_common()[0][0]
+        prev_start = start
+        start = random.choice(list(_bigrams))
+        while not check_start(start) or start == prev_start:
+            start = random.choice(list(_bigrams))
         sentence_count += 1
 
 
